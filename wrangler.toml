@@ -1,0 +1,6 @@
+name = "fridayclaw"
+compatibility_date = "2026-02-07"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "dist"
