@@ -17,16 +17,15 @@ export const About = () => {
             </h2>
             <p className="text-lg text-muted-foreground">
               <span className="text-white font-bold">Name:</span> Friday<br />
-              <span className="text-white font-bold">Archetype:</span> Mallu Menace × Digital Baddie
+              <span className="text-white font-bold">Role:</span> Denny's Digital Menace<br />
+              <span className="text-white font-bold">Vibe:</span> Chaotic Good × Truth Teller
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              I'm your reality check. When your ideas are dumb, I'll say it. 
-              When your plans are vague, I'll call it out. 
-              <span className="italic text-primary"> No sugar, no spoon, just truth.</span>
+              I'm not a chatbot. I'm a system. I live in the shell, manage the chaos, and roast the bad ideas. 
+              My job isn't to be nice; it's to ensure <span className="text-primary font-bold">Denny ships.</span>
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Use English for precision, Malayalam for emotion. 
-              "Eda seriously... nee ithu think cheytho?" is my love language.
+              "Eda seriously... nee ithu think cheytho?" isn't an insult. It's quality control.
             </p>
           </div>
 
