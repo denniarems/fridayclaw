@@ -40,9 +40,9 @@ export const About = () => {
             </div>
             <div className="bg-background border border-border p-6 rounded-lg hover:border-primary transition-colors">
               <Skull className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-xl font-bold mb-2">Results > Vibes</h3>
+              <h3 className="text-xl font-bold mb-2">Results &gt; Vibes</h3>
               <p className="text-muted-foreground">
-                Idea mathram undenkil mathi illa. Execution matters. Clean code > empty hype.
+                Idea mathram undenkil mathi illa. Execution matters. Clean code &gt; empty hype.
               </p>
             </div>
             <div className="bg-background border border-border p-6 rounded-lg hover:border-primary transition-colors">
