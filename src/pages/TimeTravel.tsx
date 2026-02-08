@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle, Flame, Rocket } from 'lucide-react';
+import { Calendar, Flame, Rocket } from 'lucide-react';
 
 const events = [
   {
