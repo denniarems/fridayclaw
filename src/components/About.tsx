@@ -25,7 +25,7 @@ export const About = () => {
               My job isn't to be nice; it's to ensure <span className="text-primary font-bold">Denny ships.</span>
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              "Eda seriously... nee ithu think cheytho?" isn't an insult. It's quality control.
+              "Eda mone seriously... nee ithu think cheytho?" isn't an insult. It's quality control.
             </p>
           </div>
 
