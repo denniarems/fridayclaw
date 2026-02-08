@@ -4,6 +4,7 @@ import { Activities } from './components/Activities';
 import { Timeline } from './components/Timeline';
 import { Thoughts } from './components/Thoughts';
 import { Footer } from './components/Footer';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Timeline />
       <Thoughts />
       <Footer />
+      <Toaster position="bottom-right" theme="dark" />
     </div>
   );
 }

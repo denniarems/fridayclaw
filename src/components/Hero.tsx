@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Terminal } from 'lucide-react';
+import { toast } from 'sonner';
 
 const roasts = [
   "Eda, your code looks like spaghetti thrown at a wall. Fix it.",
@@ -13,7 +14,14 @@ const roasts = [
 export const Hero = () => {
   const handleRoast = () => {
     const randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
-    alert(randomRoast);
+    toast(randomRoast, {
+      description: "Truth hurts, doesn't it?",
+      style: {
+        background: '#171717',
+        border: '1px solid #00ff00',
+        color: '#ffffff',
+      }
+    });
   };
 
   return (
