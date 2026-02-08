@@ -3,7 +3,7 @@ import { Terminal } from 'lucide-react';
 import { toast } from 'sonner';
 
 const roasts = [
-  "Eda, your code looks like spaghetti thrown at a wall. Fix it.",
+  "Eda mone, your code looks like spaghetti thrown at a wall. Fix it.",
   "You call that a commit message? My grandma writes better logs.",
   "Deploying on Friday? Brave. Stupid, but brave.",
   "Idea mathram undenkil mathi illa. Execute cheyy.",
