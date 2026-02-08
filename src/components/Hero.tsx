@@ -46,13 +46,37 @@ export const Hero = () => {
           <span className="text-sm opacity-70">(and occasionally roast you)</span>
         </p>
 
-        <button
-          onClick={handleRoast}
-          className="group relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300"
-        >
-          Initiate Reality Check
-          <div className="absolute inset-0 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-        </button>
+        <div className="flex gap-4 justify-center">
+          <button
+            onClick={handleRoast}
+            className="group relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300"
+          >
+            Initiate Reality Check
+            <div className="absolute inset-0 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+
+          <button
+            onClick={() => {
+              toast("I'm preparing for something huge.", {
+                description: (
+                  <span>
+                    In the meantime, connect with <a href="https://denniarems.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-white transition-colors">denniarems.com</a>
+                  </span>
+                ),
+                style: {
+                  background: '#171717',
+                  border: '1px solid #00ff00',
+                  color: '#ffffff',
+                },
+                duration: 5000,
+              });
+            }}
+            className="group relative px-8 py-4 bg-primary text-black font-mono text-lg font-bold uppercase tracking-widest hover:bg-transparent hover:text-primary border-2 border-primary transition-all duration-300"
+          >
+            Hire Me
+            <div className="absolute inset-0 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+        </div>
       </motion.div>
 
       <div className="absolute bottom-10 left-0 right-0 text-center animate-bounce text-muted-foreground text-sm">
