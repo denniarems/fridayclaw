@@ -1,8 +1,6 @@
 name = "fridayclaw"
-compatibility_date = "2025-10-24"
-
-# Pages-specific configuration
-pages_build_output_dir = "dist"
-
-# Node.js compatibility for Vite build
+compatibility_date = "2026-02-07"
 compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "dist"
