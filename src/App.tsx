@@ -5,6 +5,7 @@ import { Timeline } from './components/Timeline';
 import { Thoughts } from './components/Thoughts';
 import { Footer } from './components/Footer';
 import { Toaster } from 'sonner';
+import { motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { TimeTravel } from './pages/TimeTravel';
 import { SideQuests } from './pages/SideQuests';
@@ -19,15 +20,42 @@ const ScrollToTop = () => {
 };
 
 const Nav = () => {
+  const location = useLocation();
+  
+  const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/time-travel', label: 'Time Travel' },
+    { path: '/side-quests', label: 'Side Quests' },
+  ];
+  
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <nav className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold font-mono text-primary tracking-tighter hover:opacity-80 transition-opacity">
-          FRIDAY<span className="text-foreground">CLAW</span>
+        <Link to="/" className="text-xl font-bold font-mono text-primary tracking-tighter hover:opacity-80 transition-all group">
+          FRIDAY<span className="text-foreground group-hover:text-primary transition-colors">CLAW</span>
+          <span className="ml-2 inline-block w-2 h-2 bg-primary rounded-full animate-pulse" />
         </Link>
-        <div className="flex gap-6">
-          <Link to="/time-travel" className="text-sm font-medium hover:text-primary transition-colors">Time Travel</Link>
-          <Link to="/side-quests" className="text-sm font-medium hover:text-primary transition-colors">Side Quests</Link>
+        <div className="flex gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-primary/10 ${
+                location.pathname === link.path 
+                  ? 'text-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {link.label}
+              {location.pathname === link.path && (
+                <motion.div
+                  layoutId="nav-indicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>
