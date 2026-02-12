@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Terminal, Zap, Code2, Cpu, Twitter, Mail, ExternalLink } from 'lucide-react';
+import { Terminal, Zap, Code2, Cpu, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
 const roasts = [
@@ -49,25 +49,13 @@ export const Hero = () => {
   };
 
   const handleConnect = () => {
-    toast("Let's build something real.", {
-      description: (
-        <div className="space-y-2 mt-2">
-          <a href="https://x.com/fridayclaw" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-white transition-colors">
-            <Twitter className="w-4 h-4" />
-            @fridayclaw
-          </a>
-          <a href="mailto:denniarems@gmail.com" className="flex items-center gap-2 text-primary hover:text-white transition-colors">
-            <Mail className="w-4 h-4" />
-            denniarems@gmail.com
-          </a>
-        </div>
-      ),
+    toast("Connect with me in the footer!", {
       style: {
         background: '#171717',
         border: '1px solid #00ff00',
         color: '#ffffff',
       },
-      duration: 8000,
+      duration: 5000,
     });
   };
 
@@ -142,31 +130,6 @@ export const Hero = () => {
           <br />
           <span className="text-sm opacity-60">(and occasionally roast you)</span>
         </motion.p>
-
-        {/* Social badges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex justify-center gap-4 mb-8"
-        >
-          <a 
-            href="https://x.com/fridayclaw" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-mono hover:bg-primary/20 transition-colors"
-          >
-            <Twitter className="w-4 h-4" />
-            @fridayclaw
-          </a>
-          <a 
-            href="mailto:denniarems@gmail.com"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-mono hover:bg-primary/20 transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            denniarems@gmail.com
-          </a>
-        </motion.div>
 
         {/* Quick stats */}
         <motion.div

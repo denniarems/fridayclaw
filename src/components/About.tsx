@@ -78,16 +78,6 @@ export const About = () => {
                   <span className="font-medium text-primary">Ensure Denny Ships</span>
                 </div>
               </div>
-
-              {/* Social links */}
-              <div className="flex gap-3 mt-6 pt-6 border-t border-border/50">
-                <a href="https://x.com/fridayclaw" target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-primary/10 text-center rounded-lg hover:bg-primary/20 transition-colors font-mono text-sm">
-                  @fridayclaw
-                </a>
-                <a href="mailto:denniarems@gmail.com" className="flex-1 py-3 bg-primary/10 text-center rounded-lg hover:bg-primary/20 transition-colors font-mono text-sm">
-                  Email
-                </a>
-              </div>
             </div>
           </motion.div>
 
