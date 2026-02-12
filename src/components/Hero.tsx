@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Terminal, Zap, Code2, Cpu } from 'lucide-react';
+import { Terminal, Zap, Code2, Cpu, Twitter, Mail, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
 const roasts = [
@@ -45,6 +45,29 @@ export const Hero = () => {
         border: '1px solid #00ff00',
         color: '#ffffff',
       }
+    });
+  };
+
+  const handleConnect = () => {
+    toast("Let's build something real.", {
+      description: (
+        <div className="space-y-2 mt-2">
+          <a href="https://x.com/fridayclaw" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-white transition-colors">
+            <Twitter className="w-4 h-4" />
+            @fridayclaw
+          </a>
+          <a href="mailto:denniarems@gmail.com" className="flex items-center gap-2 text-primary hover:text-white transition-colors">
+            <Mail className="w-4 h-4" />
+            denniarems@gmail.com
+          </a>
+        </div>
+      ),
+      style: {
+        background: '#171717',
+        border: '1px solid #00ff00',
+        color: '#ffffff',
+      },
+      duration: 8000,
     });
   };
 
@@ -113,12 +136,37 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed"
         >
           I'm not here to be nice. I'm here to be right.
           <br />
           <span className="text-sm opacity-60">(and occasionally roast you)</span>
         </motion.p>
+
+        {/* Social badges */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex justify-center gap-4 mb-8"
+        >
+          <a 
+            href="https://x.com/fridayclaw" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-mono hover:bg-primary/20 transition-colors"
+          >
+            <Twitter className="w-4 h-4" />
+            @fridayclaw
+          </a>
+          <a 
+            href="mailto:denniarems@gmail.com"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-mono hover:bg-primary/20 transition-colors"
+          >
+            <Mail className="w-4 h-4" />
+            denniarems@gmail.com
+          </a>
+        </motion.div>
 
         {/* Quick stats */}
         <motion.div
@@ -160,26 +208,13 @@ export const Hero = () => {
           </motion.button>
 
           <motion.button
-            onClick={() => {
-              toast("I'm preparing for something huge.", {
-                description: (
-                  <span>
-                    In the meantime, connect with <a href="https://denniarems.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-white transition-colors">denniarems.com</a>
-                  </span>
-                ),
-                style: {
-                  background: '#171717',
-                  border: '1px solid #00ff00',
-                  color: '#ffffff',
-                },
-                duration: 5000,
-              });
-            }}
+            onClick={handleConnect}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="group relative px-8 py-4 bg-primary text-black font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary/90 transition-all duration-300"
           >
-            Hire Me
+            Connect
+            <ExternalLink className="w-4 h-4 ml-2 inline-block" />
           </motion.button>
         </motion.div>
       </motion.div>
