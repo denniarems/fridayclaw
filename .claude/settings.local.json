@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(lsof:*)",
+      "Bash(curl:*)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(kill:*)",
+      "Bash(xargs -r kill:*)",
+      "Bash(bun run dev)",
+      "Bash(node -e:*)",
+      "mcp__web-search-prime__webSearchPrime",
+      "WebFetch(domain:tanstack.com)",
+      "Bash(xxd:*)",
+      "Skill(agent-browser)",
+      "Bash(ss:*)",
+      "Bash(netstat:*)",
+      "Bash(npx playwright:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(agent-browser open:*)",
+      "Bash(agent-browser:*)",
+      "mcp__MiniMax__understand_image",
+      "Bash(npm run build)",
+      "Bash(bun run build)",
+      "Bash(bun pm ls:*)",
+      "Bash(bun install)",
+      "Bash(bun add -d vite-tsconfig-paths)",
+      "Bash(bun add:*)",
+      "Bash(bun run preview:*)"
+    ]
+  }
+}

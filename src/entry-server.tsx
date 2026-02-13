@@ -1,3 +1,3 @@
 import { createStartHandler } from '@tanstack/react-start/server'
 
-export default createStartHandler
+export default createStartHandler()

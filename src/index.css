@@ -1,6 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
+:root {
   --color-primary: #00ff00;
   --color-primary-foreground: #000000;
   --color-background: #0a0a0a;
@@ -13,30 +15,71 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@layer base {
+  html {
+    color-scheme: dark;
+  }
 
-  color-scheme: dark;
-  color: var(--color-foreground);
-  background-color: var(--color-background);
+  body {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
+@layer components {
+  .bg-background {
+    background-color: var(--color-background);
+  }
 
-::selection {
-  background-color: var(--color-primary);
-  color: var(--color-primary-foreground);
-}
+  .text-foreground {
+    color: var(--color-foreground);
+  }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+  .bg-card {
+    background-color: var(--color-card);
+  }
+
+  .text-card-foreground {
+    color: var(--color-card-foreground);
+  }
+
+  .border-border {
+    border-color: var(--color-border);
+  }
+
+  .bg-muted {
+    background-color: var(--color-muted);
+  }
+
+  .text-muted-foreground {
+    color: var(--color-muted-foreground);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .selection\:bg-primary::selection {
+    background-color: var(--color-primary);
+  }
+
+  .selection\:text-black::selection {
+    color: var(--color-primary-foreground);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
 }
 
 /* Custom scrollbar */
