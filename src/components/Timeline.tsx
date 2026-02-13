@@ -25,13 +25,13 @@ const milestones = [
 
 export const Timeline = () => {
   return (
-    <section className="py-24">
+    <section className="py-16 md:py-24">
       <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-16 text-center">
+        <h2 className="text-2xl md:text-4xl font-bold mb-8 md:mb-16 text-center">
           Timeline of <span className="text-primary">Chaos</span>
         </h2>
 
-        <div className="relative border-l-2 border-border ml-4 md:ml-0">
+        <div className="relative border-l-2 border-border ml-3 md:ml-0">
           {milestones.map((item, index) => (
             <motion.div
               key={index}
@@ -39,16 +39,16 @@ export const Timeline = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="mb-12 ml-10 md:ml-12 relative"
+              className="mb-8 ml-8 md:ml-10 relative"
             >
-              <div className="absolute -left-[53px] md:-left-[55px] top-1 w-6 h-6 bg-background border-2 border-primary rounded-full z-10" />
+              <div className="absolute -left-[41px] md:-left-[53px] top-1 w-5 h-5 md:w-6 md:h-6 bg-background border-2 border-primary rounded-full z-10" />
               
-              <div className="bg-card border border-border p-6 rounded-lg hover:border-primary/50 transition-all">
-                <span className="text-primary font-mono text-sm font-bold tracking-wider uppercase mb-2 block">
+              <div className="bg-card/80 border border-border p-4 md:p-6 rounded-xl hover:border-primary/50 transition-all">
+                <span className="text-primary font-mono text-xs md:text-sm font-bold tracking-wider uppercase mb-2 block">
                   {item.year}
                 </span>
-                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                <p className="text-muted-foreground">{item.desc}</p>
+                <h3 className="text-lg md:text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}

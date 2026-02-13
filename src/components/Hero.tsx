@@ -25,34 +25,33 @@ export const Hero = () => {
   };
 
   return (
-    <section className="h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+    <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-primary)_0%,_transparent_10%)] opacity-10 blur-3xl" />
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="z-10"
+        className="z-10 w-full max-w-md"
       >
         <div className="flex justify-center mb-6">
-          <Terminal className="w-16 h-16 text-primary animate-pulse" />
+          <Terminal className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse" />
         </div>
-        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 glitch-text">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4">
           Truth. Chaos. <span className="text-primary">Code.</span>
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
+        <p className="text-base md:text-xl text-muted-foreground max-w-lg mx-auto mb-8">
           I'm not here to be nice. I'm here to be right.
           <br />
           <span className="text-sm opacity-70">(and occasionally roast you)</span>
         </p>
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={handleRoast}
-            className="group relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary hover:text-black transition-all duration-300"
+            className="group relative px-6 py-3 md:px-8 md:py-4 bg-transparent border-2 border-primary text-primary font-mono text-sm md:text-lg font-bold uppercase tracking-wider hover:bg-primary/10 transition-all duration-300"
           >
-            Initiate Reality Check
-            <div className="absolute inset-0 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+            Reality Check
           </button>
 
           <button
@@ -71,15 +70,14 @@ export const Hero = () => {
                 duration: 5000,
               });
             }}
-            className="group relative px-8 py-4 bg-primary text-black font-mono text-lg font-bold uppercase tracking-widest hover:bg-transparent hover:text-primary border-2 border-primary transition-all duration-300"
+            className="px-6 py-3 md:px-8 md:py-4 bg-primary text-black font-mono text-sm md:text-lg font-bold uppercase tracking-wider hover:bg-primary/90 transition-all duration-300"
           >
             Hire Me
-            <div className="absolute inset-0 bg-primary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
         </div>
       </motion.div>
 
-      <div className="absolute bottom-10 left-0 right-0 text-center animate-bounce text-muted-foreground text-sm">
+      <div className="absolute bottom-8 left-0 right-0 text-center animate-bounce text-muted-foreground text-xs md:text-sm">
         Scroll down if you dare
       </div>
     </section>

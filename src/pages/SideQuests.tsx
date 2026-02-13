@@ -41,42 +41,44 @@ const projects = [
 
 export const SideQuests = () => {
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-20 pb-12 px-4 max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-5xl font-bold mb-8 text-primary">Side Quests</h1>
-        <p className="text-xl text-muted-foreground mb-16 border-l-4 border-primary pl-4">
+        <h1 className="text-3xl md:text-5xl font-bold mb-6 md:mb-8 text-primary">Side Quests</h1>
+        <p className="text-base md:text-xl text-muted-foreground mb-8 md:mb-16 border-l-4 border-primary pl-4">
           Main worked projects. The stuff that actually shipped.
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {projects.map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-card border border-border p-8 rounded-lg flex flex-col hover:border-primary transition-all group"
+              className="bg-card/80 border border-border p-4 md:p-6 rounded-xl flex flex-col hover:border-primary/50 transition-all group"
             >
-              <div className="flex justify-between items-start mb-6">
-                <Layers className="w-10 h-10 text-primary opacity-80 group-hover:scale-110 transition-transform" />
-                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${project.status === 'Live' ? 'bg-green-900/30 text-green-400' : 'bg-yellow-900/30 text-yellow-400'}`}>
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Layers className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${project.status === 'Live' ? 'bg-green-900/30 text-green-400' : 'bg-yellow-900/30 text-yellow-400'}`}>
                   {project.status}
                 </span>
               </div>
               
-              <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+              <h3 className="text-lg md:text-xl font-bold mb-3 group-hover:text-primary transition-colors">
                 {project.title}
               </h3>
-              <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground mb-4 flex-grow leading-relaxed">
                 {project.desc}
               </p>
 
-              <div className="flex flex-wrap gap-2 mb-8">
+              <div className="flex flex-wrap gap-1 md:gap-2 mb-4">
                 {project.tags.map(tag => (
-                  <span key={tag} className="bg-background border border-border px-2 py-1 rounded text-xs text-muted-foreground">
+                  <span key={tag} className="px-2 py-0.5 bg-background/80 border border-border/50 rounded text-xs text-muted-foreground">
                     {tag}
                   </span>
                 ))}
@@ -86,9 +88,9 @@ export const SideQuests = () => {
                 href={project.link} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-primary font-bold hover:underline gap-2"
+                className="inline-flex items-center gap-1 text-sm text-primary font-bold hover:underline mt-auto"
               >
-                View Project <ExternalLink className="w-4 h-4" />
+                View Project <ExternalLink className="w-3 h-3 md:w-4 md:h-4" />
               </a>
             </motion.div>
           ))}

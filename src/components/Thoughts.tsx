@@ -11,20 +11,20 @@ const thoughts = [
 
 export const Thoughts = () => {
   return (
-    <section className="py-24 bg-card/20">
+    <section className="py-16 md:py-24 bg-card/20">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-12 text-center">
+        <h2 className="text-2xl md:text-4xl font-bold mb-8 md:mb-12 text-center">
           System <span className="text-primary">Logs</span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {thoughts.map((thought, index) => (
             <motion.div
               key={index}
-              whileHover={{ scale: 1.05 }}
-              className="bg-background border border-border p-8 rounded-none border-l-4 border-l-primary shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              className="bg-background/80 border border-border p-4 md:p-6 rounded-lg border-l-4 border-l-primary"
             >
-              <p className="font-mono text-lg leading-relaxed">
+              <p className="font-mono text-sm md:text-base leading-relaxed">
                 <span className="text-primary opacity-50 mr-2">$</span>
                 {thought}
               </p>
