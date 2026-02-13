@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { TimeTravel } from './pages/TimeTravel';
 import { SideQuests } from './pages/SideQuests';
+import { ChessGame } from './pages/ChessGame';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
@@ -26,6 +27,7 @@ const Nav = () => {
 
   const navLinks = [
     { path: '/', label: 'Home' },
+    { path: '/chess', label: 'Chess' },
     { path: '/time-travel', label: 'Time Travel' },
     { path: '/side-quests', label: 'Side Quests' },
   ];
@@ -127,6 +129,7 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/chess" element={<ChessGame />} />
           <Route path="/time-travel" element={<TimeTravel />} />
           <Route path="/side-quests" element={<SideQuests />} />
         </Routes>
