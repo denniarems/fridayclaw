@@ -1,40 +1,36 @@
 {
-  "name": "fridayclaw",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "chess.js": "^1.4.0",
-    "framer-motion": "^12.33.0",
-    "lucide-react": "^0.563.0",
-    "react": "^19.2.0",
-    "react-chessboard": "^5.10.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.0",
-    "sonner": "^2.0.7"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@tailwindcss/vite": "^4.1.18",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "autoprefixer": "^10.4.24",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
-  }
+	"name": "fridayclawv2",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix",
+		"fmt": "oxfmt",
+		"fmt:check": "oxfmt --check"
+	},
+	"dependencies": {
+		"@formkit/nuxt": "1.7.2",
+		"@hypernym/nuxt-anime": "2.1.1",
+		"@nuxt/hints": "1.0.0-alpha.6",
+		"@nuxt/image": "2.0.0",
+		"@nuxt/scripts": "0.13.2",
+		"@nuxtjs/device": "4.0.0",
+		"@nuxtjs/google-fonts": "3.2.0",
+		"@nuxtjs/seo": "3.4.0",
+		"@pinia/nuxt": "0.11.3",
+		"@tresjs/nuxt": "5.2.1",
+		"@vueuse/nuxt": "14.2.1",
+		"nuxt": "^4.3.1",
+		"vue": "^3.5.28",
+		"vue-router": "^4.6.4"
+	},
+	"devDependencies": {
+		"oxfmt": "^0.32.0",
+		"oxlint": "^1.47.0"
+	}
 }
