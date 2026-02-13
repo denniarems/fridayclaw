@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Terminal, Zap, Code2, Cpu, ExternalLink, Gamepad2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 
 const roasts = [
   "Eda mone, your code looks like spaghetti thrown at a wall. Fix it.",

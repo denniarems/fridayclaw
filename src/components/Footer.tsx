@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from '@tanstack/react-router';
 import { Github, Twitter, Mail, Heart, ExternalLink } from 'lucide-react';
 
 export const Footer = () => {
@@ -80,8 +81,8 @@ export const Footer = () => {
           >
             <h4 className="font-bold mb-4">Navigation</h4>
             <div className="space-y-2">
-              <a href="/time-travel" className="block text-muted-foreground hover:text-primary transition-colors">Time Travel</a>
-              <a href="/side-quests" className="block text-muted-foreground hover:text-primary transition-colors">Side Quests</a>
+              <Link to="/time-travel" className="block text-muted-foreground hover:text-primary transition-colors">Time Travel</Link>
+              <Link to="/side-quests" className="block text-muted-foreground hover:text-primary transition-colors">Side Quests</Link>
               <a href="https://github.com/denniarems/fridayclaw" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Source Code</a>
             </div>
           </motion.div>

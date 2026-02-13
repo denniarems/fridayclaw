@@ -2,9 +2,9 @@ name = "fridayclaw"
 compatibility_date = "2026-02-07"
 compatibility_flags = ["nodejs_compat"]
 
-[assets]
-directory = "dist"
-
 [pages]
 project_name = "fridayclaw"
-compatibility_date = "2026-02-07"
+build_output_dir = ".output/cloudflare"
+
+[vars]
+ENV = "production"

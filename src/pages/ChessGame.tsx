@@ -1,27 +1,123 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { motion } from 'framer-motion';
-import { RotateCcw, Zap, Brain, Crown, Sparkles, Gamepad2 } from 'lucide-react';
+import { RotateCcw, Zap, Brain, Crown, Sparkles, Gamepad2, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 
-type GameStatus = 'playing' | 'checkmate' | 'draw' | 'stalemate';
+type GameStatus = 'idle' | 'playing' | 'checkmate' | 'draw' | 'stalemate' | 'timeout';
+
+interface TimerState {
+  white: number;
+  black: number;
+}
+
+interface Commentary {
+  text: string;
+  timestamp: number;
+}
+
+const INITIAL_TIME = 600;
+const INCREMENT = 15;
 
 export const ChessGame = () => {
   const [game, setGame] = useState(new Chess());
-  const [gameStatus, setGameStatus] = useState<GameStatus>('playing');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('idle');
   const [moveCount, setMoveCount] = useState(0);
-  const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium'>('medium');
+  const [playerColor, setPlayerColor] = useState<'white' | 'black' | null>(null);
+  const [timer, setTimer] = useState<TimerState>({ white: INITIAL_TIME, black: INITIAL_TIME });
+  const [isAIThinking, setIsAIThinking] = useState(false);
+  const [commentary, setCommentary] = useState<Commentary[]>([]);
+  const [moveHistory, setMoveHistory] = useState<string[]>([]);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const gameRef = useRef(game);
 
-  // Simple AI move generator
+  useEffect(() => {
+    gameRef.current = game;
+  }, [game]);
+
+  const addCommentary = useCallback((text: string) => {
+    setCommentary(prev => [...prev.slice(-4), { text, timestamp: Date.now() }]);
+  }, []);
+
+  const addToHistory = useCallback((move: string) => {
+    setMoveHistory(prev => [...prev, move]);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    if (gameStatus !== 'playing') {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimer(prev => {
+        const currentTurn = gameRef.current.turn() === 'w' ? 'white' : 'black';
+        const newTime = { ...prev, [currentTurn]: prev[currentTurn] - 1 };
+        
+        if (newTime[currentTurn] <= 0) {
+          setGameStatus('timeout');
+          if (timerRef.current) clearInterval(timerRef.current);
+          toast("Time's up!", {
+            description: currentTurn === 'white' ? "Black wins!" : "White wins!",
+            style: { background: '#171717', border: '1px solid #ff4444', color: '#ffffff' }
+          });
+          return prev;
+        }
+        
+        return newTime;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [gameStatus]);
+
+  const addIncrement = useCallback(() => {
+    setTimer(prev => {
+      const currentTurn = game.turn() === 'w' ? 'white' : 'black';
+      return { ...prev, [currentTurn]: prev[currentTurn] + INCREMENT };
+    });
+  }, [game]);
+
+  const callChessAPI = async (fen: string, color: 'white' | 'black', timeRemaining: TimerState, history: string[]) => {
+    try {
+      const response = await fetch('/api/chess-move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fen,
+          playerColor: color,
+          timeRemaining,
+          moveHistory: history,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('API error:', error);
+      return null;
+    }
+  };
+
+  // Simple AI move generator (fallback)
   const makeAIMove = useCallback((currentGame: Chess) => {
     const moves = currentGame.moves();
     if (moves.length === 0) return null;
-
-    if (difficulty === 'easy') {
-      return moves[Math.floor(Math.random() * moves.length)];
-    }
 
     const captures = moves.filter((m: string) => m.includes('x'));
     if (captures.length > 0) {
@@ -36,7 +132,7 @@ export const ChessGame = () => {
     }
 
     return moves[Math.floor(Math.random() * moves.length)];
-  }, [difficulty]);
+  }, []);
 
   const makeMove = useCallback((from: string, to: string, promotion?: string) => {
     const gameCopy = new Chess(game.fen());
@@ -52,6 +148,7 @@ export const ChessGame = () => {
 
       setGame(gameCopy);
       setMoveCount((prev) => prev + 1);
+      addToHistory(move.san);
 
       if (gameCopy.isCheckmate()) {
         setGameStatus('checkmate');
@@ -69,50 +166,108 @@ export const ChessGame = () => {
         toast("Check!", { description: "Your king is in danger!", style: { background: '#171717', border: '1px solid #ff4444', color: '#ffffff' } });
       }
 
-      setTimeout(() => {
-        const aiGameCopy = new Chess(gameCopy.fen());
-        const aiMoveStr = makeAIMove(aiGameCopy);
-        
-        if (aiMoveStr) {
-          try {
-            const aiMove = aiGameCopy.move(aiMoveStr);
-            if (aiMove) {
-              setGame(aiGameCopy);
-              setMoveCount((prev) => prev + 1);
+      addIncrement();
 
-              if (aiGameCopy.isCheckmate()) {
-                setGameStatus('checkmate');
-                toast("Checkmate! 🎉", {
-                  description: "I win. Of course.",
-                  style: { background: '#171717', border: '1px solid #00ff00', color: '#ffffff' }
-                });
-              } else if (aiGameCopy.isCheck()) {
-                toast("Check!", { description: "Your king is in danger...", style: { background: '#171717', border: '1px solid #ff4444', color: '#ffffff' } });
-              } else if (aiGameCopy.isDraw() || aiGameCopy.isStalemate()) {
-                setGameStatus(aiGameCopy.isDraw() ? 'draw' : 'stalemate');
+      const isPlayerMove = (playerColor === 'white' && move.color === 'w') || 
+                           (playerColor === 'black' && move.color === 'b');
+      
+      if (isPlayerMove && gameStatus === 'playing') {
+        setIsAIThinking(true);
+        
+        setTimeout(async () => {
+          const aiColor = playerColor === 'white' ? 'black' : 'white';
+          const apiResponse = await callChessAPI(gameCopy.fen(), aiColor, timer, moveHistory);
+          
+          let aiMoveStr: string | null = null;
+          
+          if (apiResponse?.move) {
+            aiMoveStr = apiResponse.move;
+            if (apiResponse.commentary) {
+              addCommentary(apiResponse.commentary);
+            }
+          } else {
+            const aiGameCopy = new Chess(gameCopy.fen());
+            aiMoveStr = makeAIMove(aiGameCopy);
+          }
+          
+          if (aiMoveStr) {
+            try {
+              const aiGameCopy = new Chess(gameCopy.fen());
+              const aiMove = aiGameCopy.move(aiMoveStr);
+              if (aiMove) {
+                setGame(aiGameCopy);
+                setMoveCount((prev) => prev + 1);
+                addToHistory(aiMove.san);
+                addIncrement();
+
+                if (aiGameCopy.isCheckmate()) {
+                  setGameStatus('checkmate');
+                  toast("Checkmate! 🎉", {
+                    description: "I win. Of course.",
+                    style: { background: '#171717', border: '1px solid #00ff00', color: '#ffffff' }
+                  });
+                } else if (aiGameCopy.isCheck()) {
+                  toast("Check!", { description: "Your king is in danger...", style: { background: '#171717', border: '1px solid #ff4444', color: '#ffffff' } });
+                } else if (aiGameCopy.isDraw() || aiGameCopy.isStalemate()) {
+                  setGameStatus(aiGameCopy.isDraw() ? 'draw' : 'stalemate');
+                }
+              }
+            } catch (e) {
+              const aiGameCopy = new Chess(gameCopy.fen());
+              aiMoveStr = makeAIMove(aiGameCopy);
+              if (aiMoveStr) {
+                try {
+                  const aiMove = aiGameCopy.move(aiMoveStr);
+                  if (aiMove) {
+                    setGame(aiGameCopy);
+                    setMoveCount((prev) => prev + 1);
+                    addToHistory(aiMove.san);
+                    addIncrement();
+                  }
+                } catch (e2) {}
               }
             }
-          } catch (e) {}
-        }
-      }, 500);
+          }
+          setIsAIThinking(false);
+        }, 800);
+      }
 
       return true;
     } catch (e) {
       return false;
     }
-  }, [game, makeAIMove]);
+  }, [game, gameStatus, playerColor, timer, moveHistory, makeAIMove, addIncrement, addToHistory, addCommentary, callChessAPI]);
 
-  const resetGame = (color?: 'white' | 'black') => {
+  const startNewGame = () => {
     const newGame = new Chess();
     setGame(newGame);
     setGameStatus('playing');
     setMoveCount(0);
-    if (color) setPlayerColor(color);
+    setTimer({ white: INITIAL_TIME, black: INITIAL_TIME });
+    setMoveHistory([]);
+    setCommentary([]);
+    
+    const assignedColor = Math.random() < 0.5 ? 'white' : 'black';
+    setPlayerColor(assignedColor);
+    
+    const fridayQuotes = [
+      "Don't blame me when you lose.",
+      "I've been waiting for this.",
+      "Let's see what you've got.",
+      "Don't hold back.",
+      "I'll go easy on you. Slightly.",
+      "Ready to be destroyed?",
+    ];
+    addCommentary(fridayQuotes[Math.floor(Math.random() * fridayQuotes.length)]);
     
     toast("New game started!", {
-      description: `You play as ${color || playerColor}`,
+      description: `You play as ${assignedColor === 'white' ? 'White' : 'Black'}`,
       style: { background: '#171717', border: '1px solid #00ff00', color: '#ffffff' }
     });
+  };
+
+  const resetGame = () => {
+    startNewGame();
   };
 
   const getStatusMessage = () => {
@@ -159,66 +314,67 @@ export const ChessGame = () => {
           transition={{ delay: 0.1 }}
           className="flex flex-wrap items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8"
         >
-          {/* Color selection */}
-          <div className="flex bg-card border border-border rounded-lg p-1">
-            <button
-              onClick={() => resetGame('white')}
-              className={`px-3 py-1.5 md:px-4 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all ${
-                playerColor === 'white' 
-                  ? 'bg-primary text-black' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              White
-            </button>
-            <button
-              onClick={() => resetGame('black')}
-              className={`px-3 py-1.5 md:px-4 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all ${
-                playerColor === 'black' 
-                  ? 'bg-primary text-black' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Black
-            </button>
-          </div>
-
-          {/* Difficulty */}
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium')}
-            className="bg-card border border-border px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium focus:outline-none focus:border-primary"
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-          </select>
-
-          {/* Reset */}
+          {/* New Game button */}
           <button
-            onClick={() => resetGame(playerColor)}
-            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-card border border-border rounded-lg text-xs md:text-sm font-medium hover:border-primary transition-all"
+            onClick={resetGame}
+            className="flex items-center gap-1.5 md:gap-2 px-4 py-2 md:px-6 md:py-2.5 bg-primary text-black rounded-lg text-sm md:text-base font-bold hover:bg-primary/90 transition-all"
           >
-            <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4" />
-            <span className="hidden sm:inline">New Game</span>
-            <span className="sm:hidden">Reset</span>
+            <RotateCcw className="w-4 h-4 md:w-5 md:h-5" />
+            New Game
           </button>
+
+          {playerColor && (
+            <div className="flex items-center gap-2 px-3 py-2 bg-card border border-border rounded-lg">
+              <Crown className="w-4 h-4 text-primary" />
+              <span className="text-xs md:text-sm font-medium">
+                You play as <span className="text-primary">{playerColor === 'white' ? 'White' : 'Black'}</span>
+              </span>
+            </div>
+          )}
         </motion.div>
 
         {/* Game board */}
         <div className="flex flex-col lg:flex-row items-start justify-center gap-4 md:gap-8">
+          {/* Timers */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.15 }}
+            className="flex lg:flex-col gap-4 order-2 lg:order-1"
+          >
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+              playerColor === 'white' && gameStatus === 'playing' 
+                ? 'bg-primary/20 border-primary' 
+                : 'bg-card border-border'
+            }`}>
+              <Clock className="w-4 h-4" />
+              <span className="font-mono text-lg">{formatTime(timer.white)}</span>
+              <span className="text-xs text-muted-foreground">White</span>
+            </div>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+              playerColor === 'black' && gameStatus === 'playing' 
+                ? 'bg-primary/20 border-primary' 
+                : 'bg-card border-border'
+            }`}>
+              <Clock className="w-4 h-4" />
+              <span className="font-mono text-lg">{formatTime(timer.black)}</span>
+              <span className="text-xs text-muted-foreground">Black</span>
+            </div>
+          </motion.div>
+
           {/* Main board */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex-shrink-0 w-full flex justify-center"
+            className="flex-shrink-0 w-full flex justify-center order-1 lg:order-2"
           >
             <div className="bg-card border border-border p-3 md:p-6 rounded-xl shadow-2xl w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[650px]">
               <Chessboard
                 options={{
                   position: game.fen(),
-                  boardOrientation: playerColor,
                   onPieceDrop: ({ sourceSquare, targetSquare }) => handlePieceDrop(sourceSquare, targetSquare),
+                  boardOrientation: playerColor || 'white',
                   boardStyle: {
                     borderRadius: '8px',
                     overflow: 'hidden',
@@ -235,7 +391,7 @@ export const ChessGame = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="flex-1 w-full max-w-md mx-auto lg:mx-0"
+            className="flex-1 w-full max-w-md mx-auto lg:mx-0 order-3"
           >
             {/* Status card */}
             <div className="bg-card border border-border p-4 md:p-6 rounded-xl mb-4">
@@ -251,49 +407,73 @@ export const ChessGame = () => {
                   <Zap className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   {moveCount} moves
                 </span>
-                <span className="flex items-center gap-1">
-                  <Gamepad2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                  {difficulty}
-                </span>
+                {isAIThinking && (
+                  <span className="flex items-center gap-1 text-primary">
+                    <Brain className="w-3.5 h-3.5 md:w-4 md:h-4 animate-pulse" />
+                    Thinking...
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Friday's taunts */}
-            {gameStatus === 'playing' && (
-              <div className="bg-gradient-to-br from-primary/10 to-background border border-primary/30 p-4 md:p-6 rounded-xl">
-                <div className="flex items-center gap-2 md:gap-3 mb-3">
-                  <Crown className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                  <h3 className="font-bold text-sm md:text-base">Friday Says</h3>
-                </div>
-                <div className="space-y-2">
-                  {game.inCheck() && (
-                    <p className="text-xs md:text-sm text-red-400 font-mono italic">
-                      "Your king is sweating. I can feel it."
-                    </p>
-                  )}
-                  {moveCount > 0 && moveCount < 5 && (
-                    <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
-                      "Warmup over. Let's get serious."
-                    </p>
-                  )}
-                  {moveCount > 20 && game.turn() === 'w' && (
-                    <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
-                      "Still thinking? 47 moves ahead..."
-                    </p>
-                  )}
-                  {moveCount > 30 && (
-                    <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
-                      "Resignation is a skill too."
-                    </p>
-                  )}
-                  {moveCount === 0 && (
-                    <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
-                      "Don't blame me when you lose."
-                    </p>
-                  )}
-                </div>
+            {/* Move History */}
+            <div className="bg-card border border-border p-4 md:p-6 rounded-xl mb-4 max-h-48 overflow-y-auto">
+              <div className="flex items-center gap-2 md:gap-3 mb-3">
+                <Gamepad2 className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                <h3 className="font-bold text-sm md:text-base">Move History</h3>
               </div>
-            )}
+              <div className="font-mono text-sm space-y-1">
+                {moveHistory.length === 0 ? (
+                  <span className="text-muted-foreground">No moves yet</span>
+                ) : (
+                  <div className="grid grid-cols-[auto_1fr] gap-x-4">
+                    {moveHistory.map((move, i) => (
+                      <span key={i} className={i % 2 === 0 ? 'text-white' : 'text-gray-400'}>
+                        {i % 2 === 0 && <span className="text-muted-foreground mr-2">{Math.floor(i/2) + 1}.</span>}
+                        {move}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Friday's taunts / Commentary */}
+            <div className="bg-gradient-to-br from-primary/10 to-background border border-primary/30 p-4 md:p-6 rounded-xl">
+              <div className="flex items-center gap-2 md:gap-3 mb-3">
+                <Crown className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                <h3 className="font-bold text-sm md:text-base">Friday Says</h3>
+              </div>
+              <div className="space-y-2">
+                {commentary.map((c, i) => (
+                  <motion.p 
+                    key={c.timestamp}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`text-xs md:text-sm font-mono italic ${
+                      i === commentary.length - 1 ? 'text-primary' : 'text-muted-foreground'
+                    }`}
+                  >
+                    "{c.text}"
+                  </motion.p>
+                ))}
+                {gameStatus === 'playing' && game.inCheck() && (
+                  <p className="text-xs md:text-sm text-red-400 font-mono italic">
+                    "Your king is sweating. I can feel it."
+                  </p>
+                )}
+                {gameStatus === 'playing' && moveCount > 20 && game.turn() === 'w' && (
+                  <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
+                    "Still thinking? 47 moves ahead..."
+                  </p>
+                )}
+                {gameStatus === 'playing' && moveCount > 30 && (
+                  <p className="text-xs md:text-sm text-muted-foreground font-mono italic">
+                    "Resignation is a skill too."
+                  </p>
+                )}
+              </div>
+            </div>
 
             {/* Game over messages */}
             {gameStatus === 'checkmate' && (
