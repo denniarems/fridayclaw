@@ -213,7 +213,7 @@ export const ChessGame = () => {
             transition={{ delay: 0.2 }}
             className="flex-shrink-0 w-full flex justify-center"
           >
-            <div className="bg-card border border-border p-2 md:p-4 rounded-xl shadow-2xl w-full max-w-[360px] md:max-w-[500px]">
+            <div className="bg-card border border-border p-3 md:p-6 rounded-xl shadow-2xl w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[650px]">
               <Chessboard
                 options={{
                   position: game.fen(),
