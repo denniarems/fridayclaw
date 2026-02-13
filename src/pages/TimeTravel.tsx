@@ -48,23 +48,23 @@ const events = [
 
 export const TimeTravel = () => {
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 max-w-4xl mx-auto">
+    <div className="min-h-screen pt-20 pb-12 px-4 max-w-2xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+        <div className="mb-10 md:mb-16">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6">
             Time <span className="gradient-text">Travel</span>
           </h1>
-          <p className="text-xl text-muted-foreground border-l-4 border-primary pl-6 py-2 max-w-2xl">
+          <p className="text-base md:text-xl text-muted-foreground border-l-4 border-primary pl-4 py-2 max-w-xl">
             A log of significant events. Not a changelog, but a <i>life</i> log.
           </p>
         </div>
 
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/0 via-primary/50 to-primary/0" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/0 via-primary/50 to-primary/0" />
 
           {events.map((event, index) => (
             <motion.div
@@ -72,22 +72,20 @@ export const TimeTravel = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className={`relative flex items-start gap-6 mb-8 ${
-                index % 2 === 0 ? 'md:flex-row-reverse' : ''
-              }`}
+              className="relative flex items-start gap-4 mb-8"
             >
               {/* Icon */}
-              <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-10 h-10 bg-background border-2 border-primary rounded-full z-10 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,0,0.3)]">
-                <event.icon className="w-4 h-4 text-primary" />
+              <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 bg-background border-2 border-primary rounded-full z-10 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,0,0.3)]">
+                <event.icon className="w-3 h-3 md:w-4 md:h-4 text-primary" />
               </div>
               
               {/* Content */}
-              <div className={`ml-20 md:ml-0 md:w-[calc(50%-3rem)] ${index % 2 === 0 ? 'md:text-right' : ''}`}>
+              <div className="ml-12 md:ml-0 md:w-[calc(50%-3rem)]">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-card/80 border border-border p-6 rounded-xl hover:border-primary/50 transition-all backdrop-blur-sm"
+                  className="bg-card/80 border border-border p-4 md:p-6 rounded-xl hover:border-primary/50 transition-all backdrop-blur-sm"
                 >
-                  <div className={`flex items-center gap-2 mb-3 ${index % 2 === 0 ? 'md:justify-end' : ''}`}>
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
                     <span className="text-xs font-mono text-primary/70 uppercase tracking-widest">
                       {event.date}
                     </span>
@@ -95,8 +93,8 @@ export const TimeTravel = () => {
                       {event.category}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed text-sm">
+                  <h3 className="text-lg md:text-xl font-bold mb-2">{event.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     {event.desc}
                   </p>
                 </motion.div>

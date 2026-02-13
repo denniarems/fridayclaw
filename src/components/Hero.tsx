@@ -60,7 +60,7 @@ export const Hero = () => {
   };
 
   return (
-    <section className="h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+    <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 relative overflow-hidden">
       {/* Animated background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
       
@@ -80,7 +80,7 @@ export const Hero = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="z-10"
+        className="z-10 w-full max-w-lg md:max-w-xl"
       >
         {/* Animated icon */}
         <motion.div
@@ -89,14 +89,14 @@ export const Hero = () => {
             rotate: [0, 5, -5, 0]
           }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-6 md:mb-8"
         >
           <div className="relative">
-            <Terminal className="w-20 h-20 text-primary drop-shadow-[0_0_15px_rgba(0,255,0,0.5)]" />
+            <Terminal className="w-14 h-14 md:w-20 md:h-20 text-primary drop-shadow-[0_0_15px_rgba(0,255,0,0.5)]" />
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="absolute -right-1 -top-1 w-4 h-4 bg-primary rounded-full"
+              className="absolute -right-1 -top-1 w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full"
             />
           </div>
         </motion.div>
@@ -105,7 +105,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6"
+          className="text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter mb-4 md:mb-6"
         >
           <span className="relative inline-block">
             <span className="relative z-10">Truth. Chaos.</span>
@@ -124,7 +124,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed"
+          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-6 leading-relaxed"
         >
           I'm not here to be nice. I'm here to be right.
           <br />
@@ -136,7 +136,7 @@ export const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex justify-center gap-8 mb-10"
+          className="flex justify-center gap-6 md:gap-8 mb-8 md:mb-10"
         >
           {[
             { icon: Zap, label: 'Fast' },
@@ -145,7 +145,7 @@ export const Hero = () => {
           ].map(({ icon: Icon, label }, i) => (
             <div key={i} className="flex items-center gap-2 text-muted-foreground">
               <Icon className="w-4 h-4 text-primary" />
-              <span className="text-sm font-mono">{label}</span>
+              <span className="text-xs md:text-sm font-mono">{label}</span>
             </div>
           ))}
         </motion.div>
@@ -154,15 +154,15 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="flex gap-4 justify-center flex-wrap"
+          className="flex gap-3 md:gap-4 justify-center flex-wrap"
         >
           <motion.button
             onClick={handleRoast}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="group relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary/10 transition-all duration-300 overflow-hidden"
+            className="group relative px-6 py-3 md:px-8 md:py-4 bg-transparent border-2 border-primary text-primary font-mono text-sm md:text-lg font-bold uppercase tracking-wider hover:bg-primary/10 transition-all duration-300 overflow-hidden"
           >
-            <span className="relative z-10">Initiate Reality Check</span>
+            <span className="relative z-10">Reality Check</span>
             <motion.div
               className="absolute inset-0 bg-primary/20 translate-y-full"
               whileHover={{ translateY: 0 }}
@@ -174,10 +174,10 @@ export const Hero = () => {
             onClick={handleConnect}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="group relative px-8 py-4 bg-primary text-black font-mono text-lg font-bold uppercase tracking-widest hover:bg-primary/90 transition-all duration-300"
+            className="group relative px-6 py-3 md:px-8 md:py-4 bg-primary text-black font-mono text-sm md:text-lg font-bold uppercase tracking-wider hover:bg-primary/90 transition-all duration-300"
           >
             Connect
-            <ExternalLink className="w-4 h-4 ml-2 inline-block" />
+            <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-2 inline-block" />
           </motion.button>
         </motion.div>
       </motion.div>
@@ -186,7 +186,7 @@ export const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 0] }}
         transition={{ delay: 1.5, duration: 2, repeat: Infinity }}
-        className="absolute bottom-10 text-muted-foreground text-sm flex flex-col items-center gap-2"
+        className="absolute bottom-8 text-muted-foreground text-xs md:text-sm flex flex-col items-center gap-2"
       >
         <span>Scroll down if you dare</span>
         <motion.div
