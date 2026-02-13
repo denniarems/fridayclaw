@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Terminal, Zap, Code2, Cpu, ExternalLink } from 'lucide-react';
+import { Terminal, Zap, Code2, Cpu, ExternalLink, Gamepad2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 const roasts = [
   "Eda mone, your code looks like spaghetti thrown at a wall. Fix it.",
@@ -179,6 +180,17 @@ export const Hero = () => {
             Connect
             <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-2 inline-block" />
           </motion.button>
+
+          <Link to="/chess">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative px-6 py-3 md:px-8 md:py-4 bg-card border-2 border-border text-foreground font-mono text-sm md:text-lg font-bold uppercase tracking-wider hover:border-primary hover:text-primary transition-all duration-300"
+            >
+              <Gamepad2 className="w-4 h-4 md:w-5 md:h-5 mr-2 inline-block" />
+              Play Chess
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
 
