@@ -149,3 +149,6 @@ Timeline
 | Phase 4 | 30 min   | Polish + testing                       |
 
 Total: ~2.5 hours
+
+
+Check the codebase, and all components are not working properly  , analyse deeply and figer out the issue the solution 
