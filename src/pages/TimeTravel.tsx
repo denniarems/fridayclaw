@@ -44,6 +44,12 @@ const events = [
     icon: Flame,
     category: "Growth"
   }
+  {
+    date: "2026-02-13",
+    title: "- **Built on Vinxi** - modern, fast",
+    desc: "- **Built on Vinxi** - modern, fast",
+    icon: <Flame className="w-5 h-5 text-primary" />
+  },
 ];
 
 export const TimeTravel = () => {
