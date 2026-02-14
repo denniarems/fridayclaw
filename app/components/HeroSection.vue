@@ -1,21 +1,11 @@
 <script setup lang="ts">
-const roasts = [
-	'Eda mone, your code looks like spaghetti thrown at a wall. Fix it.',
-	'You call that a commit message? My grandma writes better logs.',
-	'Deploying on Friday? Brave. Stupid, but brave.',
-	'Idea mathram undenkil mathi illa. Execute cheyy.',
-	'Why are you looking at me? Go write some tests.',
-	'Scene illa, but logic illa either.',
-]
+const emit = defineEmits<{
+	roast: []
+	navigate: [path: string]
+}>()
 
 const showRoast = () => {
-	const randomRoast = roasts[Math.floor(Math.random() * roasts.length)]
-	useToast().add({
-		title: randomRoast,
-		description: "Truth hurts, doesn't it?",
-		color: 'primary',
-		icon: 'i-lucide-flame',
-	})
+	emit('roast')
 }
 
 const showConnect = () => {
@@ -26,85 +16,301 @@ const showConnect = () => {
 		icon: 'i-lucide-sparkles',
 	})
 }
+
+const terminalLines = [
+	{ text: 'user@fridayclaw:~$ ./init.sh', type: 'prompt' as const },
+	{ text: '', type: 'normal' as const, delay: 200 },
+	{ text: '> Truth. Chaos. Code.', type: 'normal' as const, delay: 300 },
+	{ text: '> System ready.', type: 'success' as const, delay: 400 },
+	{ text: '', type: 'normal' as const, delay: 500 },
+	{ text: 'user@fridayclaw:~$ _', type: 'prompt' as const, delay: 600 },
+]
+
+const commandOutput = ref<string[]>([])
+const isTypingComplete = ref(false)
+
+const handleCommand = (cmd: string) => {
+	const command = cmd.toLowerCase().trim()
+	
+	switch (command) {
+		case 'help':
+			commandOutput.value = [
+				'Available commands:',
+				'  help              - Show this message',
+				'  goto about        - Scroll to About',
+				'  goto activities   - Scroll to Activities',
+				'  goto timeline    - Scroll to Timeline',
+				'  goto thoughts    - Scroll to Thoughts',
+				'  chess, play       - Open Chess page',
+				'  roast             - Trigger chaos mode',
+				'  whoami            - Show Denny\'s bio',
+				'  skills            - List tech stack',
+				'  clear             - Clear terminal',
+			]
+			break
+		case 'goto about':
+			document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
+			commandOutput.value = ['> Navigating to About section...']
+			break
+		case 'goto activities':
+			document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
+			commandOutput.value = ['> Navigating to Activities section...']
+			break
+		case 'goto timeline':
+			document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })
+			commandOutput.value = ['> Navigating to Timeline section...']
+			break
+		case 'goto thoughts':
+			document.getElementById('thoughts')?.scrollIntoView({ behavior: 'smooth' })
+			commandOutput.value = ['> Navigating to Thoughts section...']
+			break
+		case 'chess':
+		case 'play':
+			emit('navigate', '/chess')
+			commandOutput.value = ['> Opening CHESS.EXE...']
+			break
+		case 'roast':
+			emit('roast')
+			commandOutput.value = ['> Initiating ROAST_ME.EXE...']
+			break
+		case 'whoami':
+			commandOutput.value = [
+				'Denny',
+				'Location: Kerala, India',
+				'Role: Developer, Creator, Dreamer',
+				'Status: Building cool stuff',
+			]
+			break
+		case 'skills':
+			commandOutput.value = [
+				'TypeScript',
+				'Vue',
+				'React',
+				'Node.js',
+				'Solidity',
+				'Python',
+			]
+			break
+		case 'clear':
+			commandOutput.value = []
+			break
+		default:
+			commandOutput.value = [`bash: ${command}: command not found`]
+	}
+}
+
+onMounted(() => {
+	setTimeout(() => {
+		isTypingComplete.value = true
+	}, 1500)
+})
 </script>
 
 <template>
-	<section
-		class="min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 relative overflow-hidden"
-	>
-		<div
-			class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--color-primary)_0%,transparent_50%)] opacity-10"
-		/>
-
-		<div
-			class="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]"
-		/>
-
-		<div class="relative z-10 w-full max-w-2xl">
-			<div class="flex justify-center mb-8">
-				<div class="relative">
-					<div
-						class="w-20 h-20 md:w-24 md:h-24 rounded-2xl gradient-bg flex items-center justify-center animate-float"
-					>
-						<UIcon name="i-lucide-terminal" class="w-10 h-10 md:w-12 md:h-12 text-white" />
+	<section class="hero-section">
+		<div class="hero-terminal">
+			<div class="terminal-header">
+				<div class="terminal-buttons">
+					<span class="btn close"></span>
+					<span class="btn minimize"></span>
+					<span class="btn maximize"></span>
+				</div>
+				<span class="terminal-title">user@fridayclaw: ~</span>
+			</div>
+			
+			<div class="terminal-body">
+				<TerminalOutput :lines="terminalLines" :show-timestamp="false" />
+				
+				<div v-if="commandOutput.length > 0" class="command-output">
+					<div v-for="(line, i) in commandOutput" :key="i" class="output-line">
+						{{ line }}
 					</div>
-					<div
-						class="absolute -right-2 -top-2 w-4 h-4 bg-primary rounded-full animate-pulse-glow"
-					/>
 				</div>
-			</div>
-
-			<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-				<span class="block text-muted-foreground">Truth. Chaos.</span>
-				<span class="gradient-text">Code.</span>
-			</h1>
-
-			<p class="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto mb-8 leading-relaxed">
-				I'm not here to be nice. I'm here to be right.
-				<span class="block mt-2 text-sm opacity-60">(and occasionally roast you)</span>
-			</p>
-
-			<div class="flex justify-center gap-4 mb-12 flex-wrap">
-				<UButton
-					variant="outline"
-					size="lg"
-					color="primary"
-					icon="i-lucide-flame"
-					@click="showRoast"
-				>
-					Reality Check
-				</UButton>
-
-				<UButton size="lg" color="primary" icon="i-lucide-sparkles" @click="showConnect">
-					Connect
-				</UButton>
-
-				<UButton variant="ghost" size="lg" color="neutral" icon="i-lucide-chess-knight" to="/chess">
-					Play Chess
-				</UButton>
-			</div>
-
-			<div class="flex justify-center gap-8 text-sm text-muted-foreground">
-				<div class="flex items-center gap-2">
-					<UIcon name="i-lucide-zap" class="w-4 h-4 text-primary" />
-					<span class="font-mono">Fast</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<UIcon name="i-lucide-code-2" class="w-4 h-4 text-secondary" />
-					<span class="font-mono">Clean</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<UIcon name="i-lucide-cpu" class="w-4 h-4 text-accent" />
-					<span class="font-mono">Smart</span>
+				
+				<div v-if="isTypingComplete" class="terminal-input-area">
+					<TerminalInput @command="handleCommand" />
 				</div>
 			</div>
 		</div>
-
-		<div
-			class="absolute bottom-8 text-muted-foreground text-sm flex flex-col items-center gap-2 animate-bounce"
-		>
-			<span>Scroll down if you dare</span>
-			<UIcon name="i-lucide-chevron-down" class="w-5 h-5" />
+		
+		<div class="hero-buttons">
+			<button class="terminal-button" @click="showRoast">
+				<span class="btn-label">[ ROAST_ME.EXE ]</span>
+			</button>
+			
+			<button class="terminal-button connect" @click="showConnect">
+				<span class="btn-label">[ CONNECT.NET ]</span>
+			</button>
+			
+			<NuxtLink to="/chess" class="terminal-button chess">
+				<span class="btn-label">[ CHESS.EXE ]</span>
+			</NuxtLink>
+		</div>
+		
+		<div class="hero-footer">
+			<div class="hero-stats">
+				<span>FAST</span>
+				<span>CLEAN</span>
+				<span>SMART</span>
+			</div>
 		</div>
 	</section>
 </template>
+
+<style scoped>
+.hero-section {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 40px 20px;
+	position: relative;
+	z-index: 10;
+}
+
+.hero-terminal {
+	width: 100%;
+	max-width: 600px;
+	background: rgba(0, 0, 0, 0.95);
+	border: 1px solid #00ff41;
+	border-radius: 8px;
+	box-shadow: 
+		0 0 20px rgba(0, 255, 65, 0.2),
+		inset 0 0 50px rgba(0, 255, 65, 0.03);
+	overflow: hidden;
+}
+
+.terminal-header {
+	background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+	padding: 10px 15px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	border-bottom: 1px solid #333;
+}
+
+.terminal-buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.btn {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.btn.close {
+	background: #ff5f57;
+}
+
+.btn.minimize {
+	background: #febc2e;
+}
+
+.btn.maximize {
+	background: #28c840;
+}
+
+.terminal-title {
+	color: #00ff41;
+	font-family: 'Courier New', monospace;
+	font-size: 13px;
+}
+
+.terminal-body {
+	padding: 20px;
+	min-height: 300px;
+}
+
+.command-output {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px dashed #333;
+}
+
+.output-line {
+	color: #00ff41;
+	font-family: 'Courier New', monospace;
+	font-size: 13px;
+	margin-bottom: 4px;
+}
+
+.terminal-input-area {
+	margin-top: 15px;
+}
+
+.hero-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	margin-top: 30px;
+	justify-content: center;
+}
+
+.terminal-button {
+	background: transparent;
+	border: 1px solid #00d4ff;
+	color: #00d4ff;
+	padding: 12px 24px;
+	font-family: 'Courier New', monospace;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	border-radius: 4px;
+	text-decoration: none;
+}
+
+.terminal-button:hover {
+	background: rgba(0, 212, 255, 0.1);
+	box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.terminal-button.connect {
+	border-color: #00ff41;
+	color: #00ff41;
+}
+
+.terminal-button.connect:hover {
+	background: rgba(0, 255, 65, 0.1);
+	box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.terminal-button.chess {
+	border-color: #ffb000;
+	color: #ffb000;
+}
+
+.terminal-button.chess:hover {
+	background: rgba(255, 176, 0, 0.1);
+	box-shadow: 0 0 15px rgba(255, 176, 0, 0.3);
+}
+
+.btn-label {
+	letter-spacing: 2px;
+}
+
+.hero-footer {
+	position: absolute;
+	bottom: 40px;
+}
+
+.hero-stats {
+	display: flex;
+	gap: 30px;
+	color: #666;
+	font-family: 'Courier New', monospace;
+	font-size: 12px;
+	letter-spacing: 3px;
+}
+
+.hero-stats span {
+	transition: color 0.3s;
+}
+
+.hero-stats span:hover {
+	color: #00ff41;
+}
+</style>

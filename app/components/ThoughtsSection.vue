@@ -17,26 +17,86 @@ const thoughts = [
 		author: 'FridayClaw',
 	},
 ]
+
+const terminalLines = computed(() => [
+	{ text: '[2026-02-14 00:00:04] > grep -r "wisdom" /brain/', type: 'prompt' as const },
+	{ text: '', type: 'normal' as const },
+	{ text: '#1: "Better to be a warrior in a garden..."', type: 'normal' as const },
+	{ text: '#2: "Test: what\'s 2+2? ...eda, it\'s 4."', type: 'normal' as const },
+	{ text: '#3: "I don\'t celebrate. But this was satisfying."', type: 'normal' as const },
+	{ text: '#4: "Part of the journey is the end."', type: 'normal' as const },
+])
 </script>
 
 <template>
-	<section class="py-24 px-4 bg-card/30">
-		<div class="max-w-4xl mx-auto">
-			<h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">
-				<span class="gradient-text">Thoughts</span>
-			</h2>
-
-			<div class="grid md:grid-cols-2 gap-6">
-				<div
-					v-for="(thought, index) in thoughts"
-					:key="index"
-					class="glass rounded-xl p-6 hover:border-secondary/50 transition-all"
-				>
-					<UIcon name="i-lucide-message-square-quote" class="w-8 h-8 text-secondary/50 mb-4" />
-					<p class="text-lg mb-4 italic">"{{ thought.quote }}"</p>
-					<span class="text-sm text-muted-foreground">— {{ thought.author }}</span>
+	<section id="thoughts" class="thoughts-section">
+		<DraggableWindow title="brain@dump" :x="55" :y="45">
+			<div class="thoughts-content">
+				<TerminalOutput :lines="terminalLines" />
+				
+				<div class="thoughts-grid">
+					<div v-for="(thought, index) in thoughts" :key="index" class="thought-item">
+						<div class="thought-marker">#{{ index + 1 }}</div>
+						<blockquote class="thought-quote">"{{ thought.quote }}"</blockquote>
+						<span class="thought-author">— {{ thought.author }}</span>
+					</div>
 				</div>
 			</div>
-		</div>
+		</DraggableWindow>
 	</section>
 </template>
+
+<style scoped>
+.thoughts-section {
+	padding: 60px 20px;
+	min-height: 80vh;
+	position: relative;
+}
+
+.thoughts-content {
+	color: #f0f;
+	font-family: 'Courier New', monospace;
+	font-size: 13px;
+}
+
+.thoughts-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 15px;
+	margin-top: 15px;
+	padding-top: 15px;
+}
+
+.thought-item {
+	padding: 15px;
+	background: rgba(255, 0, 255, 0.05);
+	border: 1px solid rgba(255, 0, 255, 0.2);
+	border-radius: 6px;
+	transition: all 0.3s;
+}
+
+.thought-item:hover {
+	background: rgba(255, 0, 255, 0.1);
+	border-color: #f0f;
+	transform: translateY(-2px);
+}
+
+.thought-marker {
+	font-size: 11px;
+	color: #666;
+	margin-bottom: 8px;
+}
+
+.thought-quote {
+	font-size: 13px;
+	font-style: italic;
+	margin: 0 0 10px 0;
+	color: #f0f;
+	line-height: 1.5;
+}
+
+.thought-author {
+	font-size: 11px;
+	color: #888;
+}
+</style>

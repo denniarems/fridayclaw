@@ -2,10 +2,10 @@
 const route = useRoute()
 
 const navLinks = [
-	{ path: '/', label: 'Home' },
-	{ path: '/chess', label: 'Chess' },
-	{ path: '/time-travel', label: 'Time Travel' },
-	{ path: '/side-quests', label: 'Side Quests' },
+	{ path: '/', label: 'home' },
+	{ path: '/chess', label: 'chess' },
+	{ path: '/time-travel', label: 'timeline' },
+	{ path: '/side-quests', label: 'quests' },
 ]
 
 const isScrolled = ref(false)
@@ -33,74 +33,45 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div class="min-h-screen flex flex-col">
+	<div class="terminal-layout">
 		<header
 			:class="[
-				'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-				isScrolled ? 'glass py-3' : 'bg-transparent py-5',
+				'terminal-header',
+				isScrolled ? 'scrolled' : '',
 			]"
 		>
-			<nav class="max-w-7xl mx-auto px-4 flex items-center justify-between">
-				<NuxtLink
-					to="/"
-					class="text-lg md:text-xl font-bold tracking-tight hover:opacity-80 transition-opacity group"
-				>
-					<span class="text-primary">FRIDAY</span>
-					<span class="text-foreground group-hover:text-primary transition-colors">CLAW</span>
-					<span class="ml-2 inline-block w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
+			<nav class="terminal-nav">
+				<NuxtLink to="/" class="terminal-logo">
+					<span class="logo-friday">FRIDAY</span><span class="logo-claw">CLAW</span>
+					<span class="logo-blink">_</span>
 				</NuxtLink>
-
-				<div class="hidden md:flex items-center gap-1">
-					<NuxtLink
-						v-for="link in navLinks"
-						:key="link.path"
-						:to="link.path"
-						:class="[
-							'relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-primary/10',
-							route.path === link.path
-								? 'text-primary'
-								: 'text-muted-foreground hover:text-foreground',
-						]"
-					>
-						{{ link.label }}
-						<div
-							v-if="route.path === link.path"
-							class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-						/>
-					</NuxtLink>
-				</div>
 
 				<UButton
 					variant="ghost"
 					size="sm"
 					icon="i-lucide-menu"
-					class="md:hidden"
+					class="terminal-menu-btn"
 					@click="toggleMobileMenu"
 				/>
 
 				<ClientOnly>
 					<UModal v-model:open="isMobileMenuOpen">
-						<div class="p-4">
-							<div class="flex justify-between items-center mb-6">
-								<span class="text-lg font-bold">
-									<span class="text-primary">FRIDAY</span>CLAW
+						<div class="terminal-modal">
+							<div class="modal-header">
+								<span class="terminal-logo">
+									<span class="logo-friday">FRIDAY</span><span class="logo-claw">CLAW</span>
 								</span>
 								<UButton variant="ghost" size="sm" icon="i-lucide-x" @click="closeMobileMenu" />
 							</div>
-							<div class="flex flex-col gap-2">
+							<div class="modal-links">
 								<NuxtLink
 									v-for="link in navLinks"
 									:key="link.path"
 									:to="link.path"
 									@click="closeMobileMenu"
-									:class="[
-										'px-4 py-3 text-sm font-medium rounded-lg transition-all',
-										route.path === link.path
-											? 'text-primary bg-primary/10'
-											: 'text-muted-foreground hover:text-foreground hover:bg-primary/5',
-									]"
+									:class="['modal-link', route.path === link.path ? 'active' : '']"
 								>
-									{{ link.label }}
+									> {{ link.label }}
 								</NuxtLink>
 							</div>
 						</div>
@@ -109,35 +80,234 @@ onUnmounted(() => {
 			</nav>
 		</header>
 
-		<main class="flex-1 pt-16">
+		<main class="terminal-main">
 			<slot />
 		</main>
 
-		<footer class="border-t border-border/30 py-8 mt-20">
-			<div class="max-w-7xl mx-auto px-4">
-				<div class="flex flex-col md:flex-row items-center justify-between gap-4">
-					<div class="flex items-center gap-2 text-muted-foreground text-sm">
-						<span class="text-primary">FRIDAYCLAW</span>
-						<span>© {{ new Date().getFullYear() }}</span>
-					</div>
-					<div class="flex items-center gap-4">
-						<a
-							href="https://github.com/denniarems/fridayclaw"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-muted-foreground hover:text-primary transition-colors"
-						>
-							<UIcon name="i-lucide-github" class="w-5 h-5" />
-						</a>
-						<a href="#" class="text-muted-foreground hover:text-primary transition-colors">
-							<UIcon name="i-lucide-twitter" class="w-5 h-5" />
-						</a>
-						<a href="#" class="text-muted-foreground hover:text-primary transition-colors">
-							<UIcon name="i-lucide-linkedin" class="w-5 h-5" />
-						</a>
-					</div>
+		<footer class="terminal-footer">
+			<div class="footer-content">
+				<div class="footer-left">
+					<span class="terminal-prompt">user@fridayclaw:~$</span>
+					<span class="footer-copyright">© {{ new Date().getFullYear() }} Denny from Kerala</span>
+				</div>
+				<div class="footer-links">
+					<a
+						href="https://github.com/denniarems/fridayclaw"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="footer-link"
+					>
+						[ GitHub ]
+					</a>
+					<a href="#" class="footer-link">
+						[ Twitter ]
+					</a>
+					<a href="#" class="footer-link">
+						[ LinkedIn ]
+					</a>
 				</div>
 			</div>
 		</footer>
 	</div>
 </template>
+
+<style scoped>
+.terminal-layout {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.terminal-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: rgba(0, 0, 0, 0.8);
+	border-bottom: 1px solid #333;
+	transition: all 0.3s;
+	height: 45px;
+}
+
+.terminal-header.scrolled {
+	background: rgba(0, 0, 0, 0.95);
+	border-bottom-color: #00ff41;
+}
+
+.terminal-nav {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 6px 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.terminal-logo {
+	font-family: 'Courier New', monospace;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+	letter-spacing: 1px;
+}
+
+.logo-friday {
+	color: #00ff41;
+}
+
+.logo-claw {
+	color: #00d4ff;
+}
+
+.logo-blink {
+	color: #00ff41;
+	animation: cursorBlink 1s step-end infinite;
+}
+
+.nav-links {
+	display: flex;
+	gap: 5px;
+}
+
+.nav-link {
+	font-family: 'Courier New', monospace;
+	font-size: 13px;
+	color: #888;
+	text-decoration: none;
+	padding: 8px 12px;
+	border-radius: 4px;
+	transition: all 0.3s;
+	text-transform: lowercase;
+}
+
+.nav-link:hover {
+	color: #00ff41;
+	background: rgba(0, 255, 65, 0.1);
+}
+
+.nav-link.active {
+	color: #00ff41;
+	background: rgba(0, 255, 65, 0.15);
+}
+
+.terminal-menu-btn {
+	color: #00ff41 !important;
+}
+
+.terminal-menu-btn :deep(.u-button) {
+	padding: 4px 8px !important;
+}
+
+.terminal-menu-btn :deep(.u-icon) {
+	width: 20px !important;
+	height: 20px !important;
+}
+
+.terminal-modal {
+	padding: 10px;
+	background: rgba(0, 0, 0, 0.95) !important;
+	border: 1px solid #00ff41;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #333;
+}
+
+.modal-links {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.modal-link {
+	font-family: 'Courier New', monospace;
+	font-size: 14px;
+	color: #888;
+	text-decoration: none;
+	padding: 12px;
+	border-radius: 4px;
+	transition: all 0.3s;
+}
+
+.modal-link:hover {
+	color: #00ff41;
+	background: rgba(0, 255, 65, 0.1);
+}
+
+.modal-link.active {
+	color: #00ff41;
+	background: rgba(0, 255, 65, 0.15);
+}
+
+.terminal-main {
+	flex: 1;
+	padding-top: 45px;
+}
+
+.terminal-footer {
+	background: rgba(0, 0, 0, 0.9);
+	border-top: 1px solid #333;
+	padding: 20px;
+}
+
+.footer-content {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+}
+
+.footer-left {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	flex-wrap: wrap;
+}
+
+.terminal-prompt {
+	font-family: 'Courier New', monospace;
+	font-size: 12px;
+	color: #00d4ff;
+}
+
+.footer-copyright {
+	font-family: 'Courier New', monospace;
+	font-size: 12px;
+	color: #666;
+}
+
+.footer-links {
+	display: flex;
+	gap: 10px;
+}
+
+.footer-link {
+	font-family: 'Courier New', monospace;
+	font-size: 12px;
+	color: #666;
+	text-decoration: none;
+	transition: color 0.3s;
+}
+
+.footer-link:hover {
+	color: #00ff41;
+}
+
+@keyframes cursorBlink {
+	0%, 50% {
+		opacity: 1;
+	}
+	51%, 100% {
+		opacity: 0;
+	}
+}
+</style>

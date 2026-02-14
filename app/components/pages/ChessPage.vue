@@ -3,13 +3,17 @@ import { Chess } from 'chess.js'
 
 type GameStatus = 'playing' | 'checkmate' | 'draw' | 'stalemate'
 
-const game = ref(new Chess())
+const game = shallowRef<Chess | null>(null)
 const gameStatus = ref<GameStatus>('playing')
 const moveCount = ref(0)
 const playerColor = ref<'white' | 'black'>('white')
 const difficulty = ref<'easy' | 'medium'>('medium')
 
 const toast = useToast()
+
+onMounted(() => {
+	game.value = new Chess()
+})
 
 const makeAIMove = (currentGame: Chess): string | null => {
 	const moves = currentGame.moves() as string[]
@@ -33,6 +37,7 @@ const makeAIMove = (currentGame: Chess): string | null => {
 }
 
 const makeMove = (from: string, to: string, promotion?: string) => {
+	if (!game.value) return false
 	const gameCopy = new Chess(game.value.fen())
 
 	try {
@@ -130,6 +135,7 @@ const resetGame = (color?: 'white' | 'black') => {
 }
 
 const getStatusMessage = () => {
+	if (!game.value) return 'Loading...'
 	if (gameStatus.value === 'checkmate') {
 		return game.value.turn() === 'w' ? 'Friday wins!' : 'You win!'
 	}
@@ -139,6 +145,7 @@ const getStatusMessage = () => {
 }
 
 const boardSquares = computed(() => {
+	if (!game.value) return []
 	const squares: { square: string; type: string; color: string }[] = []
 	const board = game.value.board()
 
@@ -172,6 +179,7 @@ const getPieceSymbol = (type: string, color: string) => {
 }
 
 const handleSquareClick = (square: string) => {
+	if (!game.value) return
 	const piece = game.value.get(square as 'a1')
 	if (
 		piece &&
@@ -188,6 +196,7 @@ const isDarkSquare = (square: string) => {
 }
 
 const taunts = computed(() => {
+	if (!game.value) return []
 	const msgs: string[] = []
 	if (game.value.inCheck()) {
 		msgs.push('Your king is sweating. I can feel it.')
@@ -255,8 +264,9 @@ const taunts = computed(() => {
 				</UButton>
 			</div>
 
-			<div class="flex flex-col lg:flex-row items-start justify-center gap-8">
-				<div class="flex-shrink-0 w-full max-w-[400px] mx-auto">
+			<template v-if="game">
+				<div class="flex flex-col lg:flex-row items-start justify-center gap-8">
+					<div class="flex-shrink-0 w-full max-w-[400px] mx-auto">
 					<div class="bg-card border border-border rounded-xl p-4 glow-primary">
 						<div
 							class="grid grid-cols-8 gap-0.5 aspect-square"
@@ -334,7 +344,7 @@ const taunts = computed(() => {
 					>
 						<p class="text-green-400 font-mono italic">
 							{{
-								game.turn() === 'w'
+								game?.turn() === 'w'
 									? "I don't celebrate. But this was satisfying."
 									: "Well played. Don't get used to it."
 							}}
@@ -354,6 +364,10 @@ const taunts = computed(() => {
 						</p>
 					</div>
 				</div>
+			</template>
+
+			<div v-else class="flex items-center justify-center py-20">
+				<p class="text-muted-foreground font-mono">Loading chess engine...</p>
 			</div>
 		</div>
 	</div>
