@@ -7,7 +7,6 @@ export default defineNuxtConfig({
 
 	modules: [
 		'@nuxt/ui',
-		'@nuxt/icon',
 		'@nuxt/hints',
 		'@nuxt/image',
 		'@nuxt/scripts',
@@ -20,6 +19,11 @@ export default defineNuxtConfig({
 		'@tresjs/nuxt',
 		'@vueuse/nuxt',
 	],
+	icon:{
+		serverBundle:{
+			collections: ['lucide'],
+		}
+	},
 
 	ui: {
 		theme: {
