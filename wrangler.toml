@@ -8,3 +8,11 @@ directory = "dist"
 [pages]
 project_name = "fridayclaw"
 compatibility_date = "2026-02-07"
+
+# Worker configuration
+[[unsafe.bindings]]
+name = "CHESS_KV"
+namespace_id = "chess-state"
+
+[vars]
+NODE_ENV = "production"
