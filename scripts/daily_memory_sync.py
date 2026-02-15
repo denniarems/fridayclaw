@@ -198,7 +198,7 @@ class MemorySync:
             print(f"✅ Created PR: {pr_url}")
             
             # Auto-merge
-            subprocess.run(["gh", "pr", "merge", branch_name, "--auto", "--delete-branch"], check=True)
+            subprocess.run(["gh", "pr", "merge", branch_name, "--squash", "--auto", "--delete-branch"], check=True)
             print("✅ PR set to auto-merge")
         else:
             print(f"⚠️ PR creation failed: {pr_result.stderr}")
