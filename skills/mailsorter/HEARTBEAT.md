@@ -1,13 +1,57 @@
-# Executive Mail Sorter
-Run the mail sorter script: python3 /home/denny/.openclaw/workspace/mail_sorter_cron.py
+---
+name: mailsorter-heartbeat
+version: 1.0.0
+type: heartbeat
+agent: mailsorter
+interval: 30m
+idle_check: 30m
+---
+# Heartbeat — Mail Sorter
 
-If MAIL_CHECK_COMPLETE is returned, read /home/denny/.openclaw/workspace/memory/last_mail_check.json. 
-For each email:
-1. Categorize it (Work, Personal, Urgent, Meeting).
-2. If it's a meeting (Google Meet, Zoom, interview), schedule it on the calendar.
-3. If it requires a reply (Questions, Interview invites), draft a professional reply in a new file /home/denny/.openclaw/workspace/mail_drafts/<id>.txt.
-4. Notify Denny about anything 'Urgent'.
-5. Reply 'HEARTBEAT_OK' only if nothing is urgent.
+Keeps the mail sorter alive and running at regular intervals.
+Triggers a full inbox scan every 30 minutes when idle.
 
-# Idle Check
-If I idle for 4+ hours, send a brief check-in.
+## Schedule
+
+| Event | Interval |
+|---|---|
+| Idle check | 30 minutes |
+| Full inbox scan | On every wake |
+| Urgent notify | Immediately on Priority detection |
+
+## Behavior
+
+- Wakes every **30 minutes** when no manual run has occurred
+- If a manual run happened within the idle window, the heartbeat skips that cycle
+- On each wake, runs `mail_processor.py` — fetches up to 20 unread emails, categorizes, labels, and updates SQLite
+- If `urgent_emails.json` is non-empty after a run, the heartbeat should surface urgent items to the active session
+
+## Cron Expression
+
+```cron
+*/30 * * * * STEP_API_KEY=$STEP_API_KEY python3 /home/denny/.openclaw/workspace/mail_processor.py
+```
+
+## Manual Trigger
+
+```bash
+STEP_API_KEY=your_key python3 /home/denny/.openclaw/workspace/mail_processor.py
+```
+
+## Health Check
+
+The heartbeat is healthy if:
+- `emails.db` modified timestamp is within the last 35 minutes
+- Last run exited with `MAIL_CHECK_COMPLETE` or `NO_NEW_MAILS`
+- No crash logs in the last cycle
+
+```bash
+# Check last run time
+stat /home/denny/.openclaw/workspace/memory/emails.db
+
+# Check urgent queue
+cat /home/denny/.openclaw/workspace/memory/urgent_emails.json
+```
+
+## Integration
+Part of the FridayClaw ecosystem 🕊
